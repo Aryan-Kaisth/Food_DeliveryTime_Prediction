@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Delivery Time Prediction</title>
+
+  <!-- Link to your dark blue CSS -->
+<link rel="stylesheet" href="/static/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="glass-container">
+    <header>
+      <h1>🍽️ Food Delivery Time Prediction</h1>
+      <p>Enter the order details to estimate delivery duration</p>
+    </header>
+
+    <form id="deliveryForm" class="glass-form">
+      <!-- Row 1 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Order Date</label>
+          <input type="date" id="Order_Date" required />
+        </div>
+        <div class="form-group">
+          <label>Delivery Person Age</label>
+          <input type="number" id="Delivery_person_Age" min="18" max="70" required />
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Ratings</label>
+          <input type="number" id="Delivery_person_Ratings" min="1" max="5" step="0.1" required />
+        </div>
+        <div class="form-group">
+          <label>Order Time</label>
+          <input type="time" id="Time_Orderd" step="1" required />
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Pickup Time</label>
+          <input type="time" id="Time_Order_picked" step="1" required />
+        </div>
+        <div class="form-group">
+          <label>Weather</label>
+          <select id="Weatherconditions" required>
+            <option value="">Select</option>
+            <option>Sunny</option>
+            <option>Cloudy</option>
+            <option>Windy</option>
+            <option>Fog</option>
+            <option>Stormy</option>
+            <option>Sandstorms</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Traffic</label>
+          <select id="Road_traffic_density" required>
+            <option value="">Select</option>
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+            <option>Jam</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Vehicle Condition</label>
+          <select id="Vehicle_condition" required>
+            <option value="">Select</option>
+            <option value="0">0 - Poor</option>
+            <option value="1">1 - Fair</option>
+            <option value="2">2 - Good</option>
+            <option value="3">3 - Excellent</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Row 5 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Order Type</label>
+          <select id="Type_of_order" required>
+            <option value="">Select</option>
+            <option>Snack</option>
+            <option>Meal</option>
+            <option>Drinks</option>
+            <option>Buffet</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Vehicle Type</label>
+          <select id="Type_of_vehicle" required>
+            <option value="">Select</option>
+            <option>motorcycle</option>
+            <option>scooter</option>
+            <option>electric_scooter</option>
+            <option>bicycle</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Row 6 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Multiple Deliveries</label>
+          <select id="multiple_deliveries" required>
+            <option value="">Select</option>
+            <option>0</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Festival</label>
+          <select id="Festival" required>
+            <option value="">Select</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Row 7 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>City</label>
+          <select id="City" required>
+            <option value="">Select</option>
+            <option>Metropolitian</option>
+            <option>Urban</option>
+            <option>Semi-Urban</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Restaurant Latitude</label>
+          <input type="number" id="Restaurant_latitude" step="any" required />
+        </div>
+      </div>
+
+      <!-- Row 8 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Restaurant Longitude</label>
+          <input type="number" id="Restaurant_longitude" step="any" required />
+        </div>
+        <div class="form-group">
+          <label>Delivery Latitude</label>
+          <input type="number" id="Delivery_location_latitude" step="any" required />
+        </div>
+      </div>
+
+      <!-- Row 9 -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Delivery Longitude</label>
+          <input type="number" id="Delivery_location_longitude" step="any" required />
+        </div>
+        <div class="form-group empty"></div>
+      </div>
+
+      <button type="submit" class="glass-btn">🚀 Predict</button>
+    </form>
+
+    <div class="result" id="resultContainer" style="display: none">
+      <h2>Predicted Delivery Time</h2>
+      <div class="result-value" id="resultValue"></div>
+      <button class="new-btn" id="newPredictionBtn">New Prediction</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("deliveryForm");
+      const resultContainer = document.getElementById("resultContainer");
+      const resultValue = document.getElementById("resultValue");
+      const newBtn = document.getElementById("newPredictionBtn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = {
+          Order_Date: document.getElementById("Order_Date").value,
+          Delivery_person_Age: parseFloat(document.getElementById("Delivery_person_Age").value),
+          Delivery_person_Ratings: parseFloat(document.getElementById("Delivery_person_Ratings").value),
+          Restaurant_latitude: parseFloat(document.getElementById("Restaurant_latitude").value),
+          Restaurant_longitude: parseFloat(document.getElementById("Restaurant_longitude").value),
+          Delivery_location_latitude: parseFloat(document.getElementById("Delivery_location_latitude").value),
+          Delivery_location_longitude: parseFloat(document.getElementById("Delivery_location_longitude").value),
+          Time_Orderd: document.getElementById("Time_Orderd").value,
+          Time_Order_picked: document.getElementById("Time_Order_picked").value,
+          Weatherconditions: document.getElementById("Weatherconditions").value,
+          Road_traffic_density: document.getElementById("Road_traffic_density").value,
+          Vehicle_condition: parseInt(document.getElementById("Vehicle_condition").value),
+          Type_of_order: document.getElementById("Type_of_order").value,
+          Type_of_vehicle: document.getElementById("Type_of_vehicle").value,
+          multiple_deliveries: parseInt(document.getElementById("multiple_deliveries").value),
+          Festival: document.getElementById("Festival").value,
+          City: document.getElementById("City").value,
+        };
+
+        try {
+          const response = await fetch("/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const result = await response.json();
+
+          resultValue.textContent = `${result["prediction (minutes)"]} minutes`;
+          resultContainer.style.display = "block";
+          resultContainer.scrollIntoView({ behavior: "smooth" });
+        } catch (err) {
+          alert("Prediction failed. Check console.");
+          console.error(err);
+        }
+      });
+
+      newBtn.addEventListener("click", () => {
+        resultContainer.style.display = "none";
+        form.reset();
+      });
+    });
+  </script>
+</body>
+</html>

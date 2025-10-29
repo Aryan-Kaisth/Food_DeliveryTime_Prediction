@@ -1,0 +1,37 @@
+drop_cols:
+  - ID
+  - Delivery_person_ID
+
+date_time_cols:
+  - Order_Date
+  - Time_Orderd
+  - Time_Order_picked
+
+ordinal: 
+  - Road_traffic_density
+
+strip_cols:
+  - Road_traffic_density
+  - Type_of_order
+  - Type_of_vehicle
+  - Festival
+  - City
+
+target_cols: Time_taken(min)
+
+ohe_cols:
+  - Weatherconditions
+  - Type_of_order
+  - Type_of_vehicle
+  - City
+  - Festival
+
+winsor_cols:
+  - Delivery_person_Ratings
+  - Restaurant_latitude
+  - Restaurant_longitude
+  - prep_time(m)
+  - distance_km
+  - manhattan_km
+  - distance_per_speed
+  - distance_ratio
